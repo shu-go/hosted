@@ -2,12 +2,11 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 )
 
 type addCmd struct {
-	_                 struct{} `help:"{IP} {Host} [Comment] "`
+	_                 struct{} `help:"add an entry with args: {IP} {Host} [Comment] "`
 	IP, Host, Comment string
 }
 
@@ -45,9 +44,7 @@ func (c addCmd) Run(args []string, g globalCmd) error {
 	for i := range el {
 		e := el[i]
 
-		fmt.Println(e)
 		if e.Type == HostEntry && (e.IP == c.IP || e.Host == c.Host) {
-			fmt.Println("  FOUND")
 			el[i].IP = c.IP
 			el[i].Host = c.Host
 			el[i].Comment = c.Comment
