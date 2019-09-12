@@ -3,6 +3,7 @@ package main
 import "errors"
 
 type disableCmd struct {
+	_    struct{} `help:"change normal entry -> comment if exists"`
 	IP   *string
 	Host *string
 }

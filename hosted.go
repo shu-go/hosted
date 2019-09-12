@@ -80,9 +80,25 @@ func WriteEntries(filename string, el []Entry) error {
 func main() {
 	app := gli.NewWith(&globalCmd{})
 	app.Name = "hosted"
-	app.Desc = ""
+	app.Desc = "edit Windows HOSTS file"
 	app.Version = "0.1.0"
-	app.Usage = `edit hosts file`
+	app.Usage = `RUN AS ADMINISTRATOR
+
+# ADD new server "server01" as 192.168.1.201
+hosted add --ip 192.168.1.201 --host server01 --comment "new server"
+hosted add 192.168.1.201 server01 new server
+
+# REMOVE a wrong entry
+hosted delete --ip 192.168.1.210
+
+# COMMENT-OUT (disable) oldserver
+hosted disable --host oldserver
+hosted x --host oldserver
+
+# COMMENT-IN (enable) oldserver back
+hosted enable --host oldserver
+hosted o --host oldserver
+`
 	app.Copyright = "(C) 2019 Shuhei Kubota"
 	app.Run(os.Args)
 }

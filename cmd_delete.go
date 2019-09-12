@@ -3,6 +3,7 @@ package main
 import "errors"
 
 type deleteCmd struct {
+	_    struct{} `help:"delete an entry with  --ip 192.168.1.200 and/or --host oldserver"`
 	IP   *string
 	Host *string
 }
