@@ -81,7 +81,7 @@ func main() {
 	app := gli.NewWith(&globalCmd{})
 	app.Name = "hosted"
 	app.Desc = "edit Windows HOSTS file"
-	app.Version = "0.1.0"
+	app.Version = "0.1.1"
 	app.Usage = `RUN AS ADMINISTRATOR
 
 # ADD new server "server01" as 192.168.1.201
