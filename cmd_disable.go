@@ -13,6 +13,21 @@ func (c disableCmd) Run(g globalCmd) error {
 		return errors.New("IP or Host is required")
 	}
 
+	var cmp func(string, string) bool
+	if c.IP != nil && c.Host != nil {
+		cmp = func(ip, host string) bool {
+			return ip == *c.IP && host == *c.Host
+		}
+	} else if c.IP != nil {
+		cmp = func(ip, host string) bool {
+			return ip == *c.IP
+		}
+	} else if c.Host != nil {
+		cmp = func(ip, host string) bool {
+			return host == *c.Host
+		}
+	}
+
 	el, err := ReadEntries(g.Hosts)
 	if err != nil {
 		return err
@@ -21,11 +36,7 @@ func (c disableCmd) Run(g globalCmd) error {
 	dirty := false
 	for i, e := range el {
 		found := false
-		if c.IP != nil && c.Host != nil && e.IP == *c.IP && e.Host == *c.Host {
-			found = true
-		} else if c.IP != nil && e.IP == *c.IP {
-			found = true
-		} else if c.Host != nil && e.Host == *c.Host {
+		if cmp(e.IP, e.Host) {
 			found = true
 		}
 
