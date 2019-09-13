@@ -60,7 +60,7 @@ func ReadEntry(line string) *Entry {
 		}
 	}
 
-	re := hostRE.Copy()
+	re := hostRE
 	subs := re.FindStringSubmatch(line)
 	if len(subs) != 0 {
 		return &Entry{
@@ -72,7 +72,7 @@ func ReadEntry(line string) *Entry {
 		}
 	}
 
-	re = commentRE.Copy()
+	re = commentRE
 	subs = re.FindStringSubmatch(line)
 	if len(subs) != 0 {
 		return &Entry{
