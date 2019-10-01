@@ -4,9 +4,18 @@ import (
 	"bufio"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/shu-go/gli"
 )
+
+var Version string
+
+func init() {
+	if Version == "" {
+		Version = "dev-" + time.Now().Format("20060102")
+	}
+}
 
 type globalCmd struct {
 	Hosts string `cli:"hosts=PATH"  default:"C:\\Windows\\System32\\Drivers\\etc\\hosts"`
@@ -57,7 +66,7 @@ func main() {
 	app := gli.NewWith(&globalCmd{})
 	app.Name = "hosted"
 	app.Desc = "edit Windows HOSTS file"
-	app.Version = "0.1.1"
+	app.Version = Version
 	app.Usage = `RUN AS ADMINISTRATOR
 
 # ADD new server "server01" as 192.168.1.201
