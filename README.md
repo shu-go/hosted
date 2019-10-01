@@ -1,11 +1,12 @@
 Windows HOSTS file editor command
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/shu-go/hosted)](https://goreportcard.com/report/github.com/shu-go/hosted)
+![MIT License](https://img.shields.io/badge/License-MIT-blue)
 
 
 # Usage 
 
-## subcommands
+## Subcommands
 
 ```
 hosted - edit Windows HOSTS file(0.1.0)
