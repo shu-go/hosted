@@ -48,30 +48,6 @@ func WriteEntries(filename string, el []Entry) error {
 	for _, e := range el {
 		content = append(content, e.String()...)
 		content = append(content, "\n"...)
-		/*
-			switch e.Type {
-			case EmptyEntry:
-				content = append(content, "\n"...)
-
-			case CommentEntry:
-				content = append(content, "# "...)
-				content = append(content, e.Comment...)
-				content = append(content, "\n"...)
-
-			case HostEntry:
-				if !e.Enabled {
-					content = append(content, "# "...)
-				}
-				content = append(content, e.IP...)
-				content = append(content, "  "...)
-				content = append(content, e.Host...)
-				if e.Comment != "" {
-					content = append(content, "  # "...)
-					content = append(content, e.Comment...)
-				}
-				content = append(content, "\n"...)
-			}
-		*/
 	}
 
 	return ioutil.WriteFile(filename, content, os.ModePerm)
