@@ -50,8 +50,8 @@ func (e Entry) String() string {
 }
 
 //var hostRE = regexp.MustCompile(`^(#?)\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*(\S+)\s*(?:#\s*(.+))?`)
-var hostRE = regexp.MustCompile(`^(#?)\s*([0-9\.:]{1,})\s*(\S+)\s*(?:#\s*(.+))?`)
-var commentRE = regexp.MustCompile(`^#(.*)`)
+var hostRE = regexp.MustCompile(`^\s*(#?)\s*([0-9\.:]{1,})\s+(\S+)\s*(?:#\s*(.+))?`)
+var commentRE = regexp.MustCompile(`^\s*#(.*)`)
 
 func ReadEntry(line string) *Entry {
 	if line == "" {
