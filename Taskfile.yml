@@ -1,0 +1,19 @@
+# https://taskfile.dev
+
+version: '2'
+
+tasks:
+  default:
+      deps: [test, build]
+
+  test:
+    cmds:
+      - go test -v ./...
+
+  build:
+    cmds:
+      - go build -ldflags "-s -w -X main.Version={{.TAG}}" ./...
+      - where upx && upx hosted{{exeExt}}
+    vars:
+        TAG:
+            sh: git describe --abbrev=0
