@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"io/ioutil"
+	"io"
 	"os"
 	"time"
 
@@ -35,9 +35,13 @@ func ReadEntries(filename string) ([]Entry, error) {
 	}
 	defer f.Close()
 
+	return ReadEntriesFromReader(f)
+}
+
+func ReadEntriesFromReader(in io.Reader) ([]Entry, error) {
 	el := make([]Entry, 0, 10)
 
-	scanner := bufio.NewScanner(f)
+	scanner := bufio.NewScanner(in)
 	for scanner.Scan() {
 		e := ReadEntry(scanner.Text())
 		if e != nil {
@@ -52,6 +56,16 @@ func ReadEntries(filename string) ([]Entry, error) {
 }
 
 func WriteEntries(filename string, el []Entry) error {
+	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return WriteEntriesToWriter(f, el)
+}
+
+func WriteEntriesToWriter(out io.Writer, el []Entry) error {
 	content := make([]byte, 0, 1024)
 
 	for _, e := range el {
@@ -59,7 +73,19 @@ func WriteEntries(filename string, el []Entry) error {
 		content = append(content, "\n"...)
 	}
 
-	return ioutil.WriteFile(filename, content, os.ModePerm)
+	_, err := io.WriteString(out, string(content))
+	return err
+}
+
+func matches(e Entry, ip, host *string) bool {
+	if ip != nil && e.IP != *ip {
+		return false
+	}
+	if host != nil && e.Host != *host {
+		return false
+	}
+
+	return true
 }
 
 func main() {
