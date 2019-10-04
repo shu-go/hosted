@@ -11,6 +11,22 @@ type addCmd struct {
 }
 
 func (c addCmd) Run(args []string, g globalCmd) error {
+	err := c.Feed(args)
+	if err != nil {
+		return err
+	}
+
+	el, err := ReadEntries(g.Hosts)
+	if err != nil {
+		return err
+	}
+
+	el = c.AddTo(el)
+
+	return WriteEntries(g.Hosts, el)
+}
+
+func (c *addCmd) Feed(args []string) error {
 	idx := 0
 	if c.IP == "" {
 		if len(args) < idx+1 {
@@ -34,26 +50,18 @@ func (c addCmd) Run(args []string, g globalCmd) error {
 			c.Comment = strings.Join(args[idx:], " ")
 		}
 	}
-
-	el, err := ReadEntries(g.Hosts)
-	if err != nil {
-		return err
-	}
-
-	el = c.Add(el, c.IP, c.Host, c.Comment)
-
-	return WriteEntries(g.Hosts, el)
+	return nil
 }
 
-func (c addCmd) Add(el []Entry, ip, host, comment string) []Entry {
+func (c addCmd) AddTo(el []Entry) []Entry {
 	found := false
 	for i := range el {
 		e := el[i]
 
-		if e.Type == HostEntry && (e.IP == ip || e.Host == host) {
-			el[i].IP = ip
-			el[i].Host = host
-			el[i].Comment = comment
+		if e.Type == HostEntry && (e.IP == c.IP || e.Host == c.Host) {
+			el[i].IP = c.IP
+			el[i].Host = c.Host
+			el[i].Comment = c.Comment
 			el[i].Enabled = true
 
 			found = true
@@ -64,9 +72,9 @@ func (c addCmd) Add(el []Entry, ip, host, comment string) []Entry {
 	if !found {
 		el = append(el, Entry{
 			Type:    HostEntry,
-			IP:      ip,
-			Host:    host,
-			Comment: comment,
+			IP:      c.IP,
+			Host:    c.Host,
+			Comment: c.Comment,
 			Enabled: true,
 		})
 	}
