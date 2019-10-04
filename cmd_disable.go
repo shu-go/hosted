@@ -35,7 +35,7 @@ func (c disableCmd) Disable(el []Entry) []Entry {
 			found = true
 		}
 
-		if found && e.Type == HostEntry {
+		if found && e.Type == HostEntry && el[i].Enabled {
 			el[i].Enabled = false
 			dirty = true
 		}
