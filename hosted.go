@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/shu-go/gli"
@@ -78,15 +79,24 @@ func writeEntriesToWriter(out io.Writer, el []entry) error {
 	return err
 }
 
-func matches(e entry, ip, host *string) bool {
-	if ip != nil && e.IP != *ip {
-		return false
-	}
-	if host != nil && e.Host != *host {
+func matches(e entry, ip, host, comment *string) bool {
+	if ip == nil && host == nil && comment == nil {
 		return false
 	}
 
-	return true
+	matching := true
+
+	if ip != nil {
+		matching = matching && (e.IP == *ip)
+	}
+	if host != nil {
+		matching = matching && (e.Host == *host)
+	}
+	if comment != nil {
+		matching = matching && strings.Contains(e.Comment, *comment)
+	}
+
+	return matching
 }
 
 func main() {
