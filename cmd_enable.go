@@ -7,13 +7,14 @@ import (
 type enableCmd struct {
 	_ struct{} `help:"change comment -> normal entry if exists"`
 
-	IP   *string
-	Host *string
+	IP      *string
+	Host    *string
+	Comment *string
 }
 
 func (c enableCmd) Run(g globalCmd) error {
-	if c.IP == nil && c.Host == nil {
-		return errors.New("IP or Host is required")
+	if c.IP == nil && c.Host == nil && c.Comment == nil {
+		return errors.New("IP or Host or Comment is required")
 	}
 
 	el, err := readEntries(g.Hosts)
@@ -34,7 +35,7 @@ func (c enableCmd) enable(el []entry) []entry {
 
 	for i, e := range el {
 		found := false
-		if matches(e, c.IP, c.Host) {
+		if matches(e, c.IP, c.Host, c.Comment) {
 			found = true
 		}
 
