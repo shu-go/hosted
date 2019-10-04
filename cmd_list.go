@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 )
 
 type listCmd struct {
@@ -13,11 +15,15 @@ func (c listCmd) Run(g globalCmd) error {
 		return err
 	}
 
-	for _, e := range el {
-		if e.Type == HostEntry {
-			fmt.Println(e)
-		}
-	}
+	c.List(el, os.Stdout)
 
 	return nil
+}
+
+func (c listCmd) List(el []Entry, out io.Writer) {
+	for _, e := range el {
+		if e.Type == HostEntry {
+			fmt.Fprintln(out, e)
+		}
+	}
 }

@@ -40,14 +40,20 @@ func (c addCmd) Run(args []string, g globalCmd) error {
 		return err
 	}
 
+	el = c.Add(el, c.IP, c.Host, c.Comment)
+
+	return WriteEntries(g.Hosts, el)
+}
+
+func (c addCmd) Add(el []Entry, ip, host, comment string) []Entry {
 	found := false
 	for i := range el {
 		e := el[i]
 
-		if e.Type == HostEntry && (e.IP == c.IP || e.Host == c.Host) {
-			el[i].IP = c.IP
-			el[i].Host = c.Host
-			el[i].Comment = c.Comment
+		if e.Type == HostEntry && (e.IP == ip || e.Host == host) {
+			el[i].IP = ip
+			el[i].Host = host
+			el[i].Comment = comment
 			el[i].Enabled = true
 
 			found = true
@@ -58,12 +64,12 @@ func (c addCmd) Run(args []string, g globalCmd) error {
 	if !found {
 		el = append(el, Entry{
 			Type:    HostEntry,
-			IP:      c.IP,
-			Host:    c.Host,
-			Comment: c.Comment,
+			IP:      ip,
+			Host:    host,
+			Comment: comment,
 			Enabled: true,
 		})
 	}
 
-	return WriteEntries(g.Hosts, el)
+	return el
 }
