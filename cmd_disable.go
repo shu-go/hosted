@@ -13,20 +13,20 @@ func (c disableCmd) Run(g globalCmd) error {
 		return errors.New("IP or Host is required")
 	}
 
-	el, err := ReadEntries(g.Hosts)
+	el, err := readEntries(g.Hosts)
 	if err != nil {
 		return err
 	}
 
-	el = c.Disable(el)
+	el = c.disable(el)
 
 	if el != nil {
-		return WriteEntries(g.Hosts, el)
+		return writeEntries(g.Hosts, el)
 	}
 	return nil
 }
 
-func (c disableCmd) Disable(el []Entry) []Entry {
+func (c disableCmd) disable(el []entry) []entry {
 	dirty := false
 
 	for i, e := range el {
@@ -35,7 +35,7 @@ func (c disableCmd) Disable(el []Entry) []Entry {
 			found = true
 		}
 
-		if found && e.Type == HostEntry && el[i].Enabled {
+		if found && e.Type == hostEntry && el[i].Enabled {
 			el[i].Enabled = false
 			dirty = true
 		}

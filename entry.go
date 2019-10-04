@@ -2,28 +2,28 @@ package main
 
 import "regexp"
 
-type EntryType int
+type entryType int
 
 const (
-	EmptyEntry EntryType = iota
-	HostEntry
-	CommentEntry
+	emptyEntry entryType = iota
+	hostEntry
+	commentEntry
 )
 
-func (t EntryType) String() string {
+func (t entryType) String() string {
 	switch t {
-	case EmptyEntry:
+	case emptyEntry:
 		return "_"
-	case HostEntry:
+	case hostEntry:
 		return "H"
-	case CommentEntry:
+	case commentEntry:
 		return "#"
 	}
 	return ""
 }
 
-type Entry struct {
-	Type EntryType
+type entry struct {
+	Type entryType
 
 	IP      string
 	Host    string
@@ -31,11 +31,11 @@ type Entry struct {
 	Enabled bool
 }
 
-func (e Entry) String() string {
+func (e entry) String() string {
 	switch e.Type {
-	case CommentEntry:
+	case commentEntry:
 		return "#" + e.Comment
-	case HostEntry:
+	case hostEntry:
 		var s string
 		if !e.Enabled {
 			s = "# "
@@ -53,18 +53,18 @@ func (e Entry) String() string {
 var hostRE = regexp.MustCompile(`^\s*(#?)\s*([0-9\.:]{1,})\s+(\S+)\s*(?:#\s*(.+))?`)
 var commentRE = regexp.MustCompile(`^\s*#(.*)`)
 
-func ReadEntry(line string) *Entry {
+func readEntry(line string) *entry {
 	if line == "" {
-		return &Entry{
-			Type: EmptyEntry,
+		return &entry{
+			Type: emptyEntry,
 		}
 	}
 
 	re := hostRE
 	subs := re.FindStringSubmatch(line)
 	if len(subs) != 0 {
-		return &Entry{
-			Type:    HostEntry,
+		return &entry{
+			Type:    hostEntry,
 			IP:      subs[2],
 			Host:    subs[3],
 			Comment: subs[4],
@@ -75,8 +75,8 @@ func ReadEntry(line string) *Entry {
 	re = commentRE
 	subs = re.FindStringSubmatch(line)
 	if len(subs) != 0 {
-		return &Entry{
-			Type:    CommentEntry,
+		return &entry{
+			Type:    commentEntry,
 			Comment: subs[1],
 		}
 	}

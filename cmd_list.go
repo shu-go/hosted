@@ -10,19 +10,19 @@ type listCmd struct {
 }
 
 func (c listCmd) Run(g globalCmd) error {
-	el, err := ReadEntries(g.Hosts)
+	el, err := readEntries(g.Hosts)
 	if err != nil {
 		return err
 	}
 
-	c.List(el, os.Stdout)
+	c.list(el, os.Stdout)
 
 	return nil
 }
 
-func (c listCmd) List(el []Entry, out io.Writer) {
+func (c listCmd) list(el []entry, out io.Writer) {
 	for _, e := range el {
-		if e.Type == HostEntry {
+		if e.Type == hostEntry {
 			fmt.Fprintln(out, e)
 		}
 	}

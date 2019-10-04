@@ -25,7 +25,7 @@ func TestCmdAdd(t *testing.T) {
 			Host:    "hogeserver",
 			Comment: "this is a server",
 		}
-		el = add.AddTo(el)
+		el = add.addTo(el)
 
 		result := list(el)
 		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server
@@ -41,8 +41,8 @@ func TestCmdAdd(t *testing.T) {
 	t.Run("Args", func(t *testing.T) {
 		el := read(hosts)
 		add := addCmd{}
-		add.Feed([]string{"::2", "hogeserver", "this is a server"})
-		el = add.AddTo(el)
+		add.feed([]string{"::2", "hogeserver", "this is a server"})
+		el = add.addTo(el)
 
 		result := list(el)
 		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server

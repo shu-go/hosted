@@ -22,7 +22,7 @@ func TestDisable(t *testing.T) {
 		ip := "127.0.0.1"
 		el := read(hosts)
 		disable := disableCmd{IP: &ip}
-		el = disable.Disable(el)
+		el = disable.disable(el)
 		result := list(el)
 		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server
 # 38.25.63.10 x.acme.com # x client host
@@ -37,7 +37,7 @@ func TestDisable(t *testing.T) {
 		ip = "111.111.1.111"
 		el = read(hosts)
 		disable = disableCmd{IP: &ip}
-		el = disable.Disable(el)
+		el = disable.disable(el)
 		result = list(el)
 		gotwant.Test(t, result, ``)
 	})
@@ -46,7 +46,7 @@ func TestDisable(t *testing.T) {
 		host := "localhost"
 		el := read(hosts)
 		disable := disableCmd{Host: &host}
-		el = disable.Disable(el)
+		el = disable.disable(el)
 		result := list(el)
 		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server
 # 38.25.63.10 x.acme.com # x client host
@@ -61,7 +61,7 @@ func TestDisable(t *testing.T) {
 		host = "server01"
 		el = read(hosts)
 		disable = disableCmd{Host: &host}
-		el = disable.Disable(el)
+		el = disable.disable(el)
 		result = list(el)
 		gotwant.Test(t, result, ``)
 	})
