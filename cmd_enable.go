@@ -21,7 +21,17 @@ func (c enableCmd) Run(g globalCmd) error {
 		return err
 	}
 
+	el = c.Enable(el)
+
+	if el != nil {
+		return WriteEntries(g.Hosts, el)
+	}
+	return nil
+}
+
+func (c enableCmd) Enable(el []Entry) []Entry {
 	dirty := false
+
 	for i, e := range el {
 		found := false
 		if matches(e, c.IP, c.Host) {
@@ -35,7 +45,7 @@ func (c enableCmd) Run(g globalCmd) error {
 	}
 
 	if dirty {
-		return WriteEntries(g.Hosts, el)
+		return el
 	}
 	return nil
 }

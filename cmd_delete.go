@@ -1,6 +1,8 @@
 package main
 
-import "errors"
+import (
+	"errors"
+)
 
 type deleteCmd struct {
 	_    struct{} `help:"delete an entry with  --ip 192.168.1.200 and/or --host oldserver"`
@@ -18,22 +20,32 @@ func (c deleteCmd) Run(g globalCmd) error {
 		return err
 	}
 
+	el, changed := c.Delete(el, c.IP, c.Host)
+
+	if changed {
+		return WriteEntries(g.Hosts, el)
+	}
+
+	return nil
+}
+
+func (c deleteCmd) Delete(el []Entry, ip, host *string) ([]Entry, bool) {
 	idx := -1
 	for i, e := range el {
-		if c.IP != nil && c.Host != nil && e.IP == *c.IP && e.Host == *c.Host {
+		if ip != nil && host != nil && e.IP == *ip && e.Host == *host {
 			idx = i
 			break
-		} else if c.IP != nil && e.IP == *c.IP {
+		} else if ip != nil && e.IP == *ip {
 			idx = i
 			break
-		} else if c.Host != nil && e.Host == *c.Host {
+		} else if host != nil && e.Host == *host {
 			idx = i
 			break
 		}
 	}
 	if idx != -1 { // found
 		el = append(el[:idx], el[idx+1:]...)
-		return WriteEntries(g.Hosts, el)
+		return el, true
 	}
-	return nil
+	return el, false
 }
