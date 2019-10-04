@@ -38,7 +38,7 @@ func (c enableCmd) Enable(el []Entry) []Entry {
 			found = true
 		}
 
-		if found && e.Type == HostEntry {
+		if found && e.Type == HostEntry && !el[i].Enabled {
 			el[i].Enabled = true
 			dirty = true
 		}
