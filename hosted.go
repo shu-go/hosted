@@ -56,7 +56,7 @@ func ReadEntriesFromReader(in io.Reader) ([]Entry, error) {
 }
 
 func WriteEntries(filename string, el []Entry) error {
-	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(filename, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
