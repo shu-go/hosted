@@ -89,4 +89,40 @@ func TestCmdDelete(t *testing.T) {
 # 192.168.1.201 server01 # new server
 `)
 	})
+
+	t.Run("Comment", func(t *testing.T) {
+		el := read(hosts)
+		comment := "server"
+		del := deleteCmd{
+			Comment: &comment,
+		}
+		el, changed := del.deleteFrom(el)
+
+		gotwant.Test(t, changed, true)
+
+		result := list(el)
+		gotwant.Test(t, result, `# 38.25.63.10 x.acme.com # x client host
+127.0.0.1 localhost # THIS IS LOCALHOST
+::1 localhost
+# 118.151.235.191 example.com
+`)
+
+		el = read(hosts)
+		comment = "hgoehgoelocalhost"
+		del = deleteCmd{
+			Comment: &comment,
+		}
+		el, changed = del.deleteFrom(el)
+
+		gotwant.Test(t, changed, false)
+
+		result = list(el)
+		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server
+# 38.25.63.10 x.acme.com # x client host
+127.0.0.1 localhost # THIS IS LOCALHOST
+::1 localhost
+# 118.151.235.191 example.com
+# 192.168.1.201 server01 # new server
+`)
+	})
 }

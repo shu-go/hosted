@@ -2,19 +2,22 @@ package main
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/shu-go/clise"
 )
 
 type deleteCmd struct {
-	_    struct{} `help:"delete an entry with  --ip 192.168.1.200 and/or --host oldserver"`
-	IP   *string
-	Host *string
+	_ struct{} `help:"delete an entry with  --ip 192.168.1.200 and/or --host oldserver"`
+
+	IP      *string
+	Host    *string
+	Comment *string
 }
 
 func (c deleteCmd) Run(g globalCmd) error {
-	if c.IP == nil && c.Host == nil {
-		return errors.New("IP or Host is required")
+	if c.IP == nil && c.Host == nil && c.Comment == nil {
+		return errors.New("IP or Host or Comment is required")
 	}
 
 	el, err := readEntries(g.Hosts)
@@ -33,14 +36,22 @@ func (c deleteCmd) Run(g globalCmd) error {
 
 func (c deleteCmd) deleteFrom(el []entry) ([]entry, bool) {
 	changed := false
+
 	clise.Filter(&el, func(i int) bool {
-		if c.IP != nil && c.Host != nil && el[i].IP == *c.IP && el[i].Host == *c.Host {
-			changed = true
-			return false
-		} else if c.IP != nil && el[i].IP == *c.IP {
-			changed = true
-			return false
-		} else if c.Host != nil && el[i].Host == *c.Host {
+		e := el[i]
+
+		deleting := true
+		if c.IP != nil {
+			deleting = deleting && (e.IP == *c.IP)
+		}
+		if c.Host != nil {
+			deleting = deleting && (e.Host == *c.Host)
+		}
+		if c.Comment != nil {
+			deleting = deleting && strings.Contains(e.Comment, *c.Comment)
+		}
+
+		if deleting {
 			changed = true
 			return false
 		}
