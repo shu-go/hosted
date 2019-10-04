@@ -9,13 +9,13 @@ import (
 func TestEntry(t *testing.T) {
 	t.Run("Read", func(t *testing.T) {
 		cc := []gotwant.TestCase{
-			gotwant.Case(ReadEntry(""), &Entry{Type: EmptyEntry}),
-			gotwant.Case(ReadEntry("# hoge"), &Entry{Type: CommentEntry, Comment: " hoge"}),
-			gotwant.Case(ReadEntry(" # hoge"), &Entry{Type: CommentEntry, Comment: " hoge"}),
-			gotwant.Case(ReadEntry("192.168.1.1"), (*Entry)(nil)),
-			gotwant.Case(ReadEntry("192.168.1.1 my-host"), &Entry{Type: HostEntry, IP: "192.168.1.1", Host: "my-host", Enabled: true}),
-			gotwant.Case(ReadEntry("192.168.1.1 my-host # myhome"), &Entry{Type: HostEntry, IP: "192.168.1.1", Host: "my-host", Comment: "myhome", Enabled: true}),
-			gotwant.Case(ReadEntry("# 192.168.1.1 my-host # myhome"), &Entry{Type: HostEntry, IP: "192.168.1.1", Host: "my-host", Comment: "myhome", Enabled: false}),
+			gotwant.Case(readEntry(""), &entry{Type: emptyEntry}),
+			gotwant.Case(readEntry("# hoge"), &entry{Type: commentEntry, Comment: " hoge"}),
+			gotwant.Case(readEntry(" # hoge"), &entry{Type: commentEntry, Comment: " hoge"}),
+			gotwant.Case(readEntry("192.168.1.1"), (*entry)(nil)),
+			gotwant.Case(readEntry("192.168.1.1 my-host"), &entry{Type: hostEntry, IP: "192.168.1.1", Host: "my-host", Enabled: true}),
+			gotwant.Case(readEntry("192.168.1.1 my-host # myhome"), &entry{Type: hostEntry, IP: "192.168.1.1", Host: "my-host", Comment: "myhome", Enabled: true}),
+			gotwant.Case(readEntry("# 192.168.1.1 my-host # myhome"), &entry{Type: hostEntry, IP: "192.168.1.1", Host: "my-host", Comment: "myhome", Enabled: false}),
 		}
 		gotwant.TestAll(t, cc)
 	})

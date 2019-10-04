@@ -17,21 +17,21 @@ func (c deleteCmd) Run(g globalCmd) error {
 		return errors.New("IP or Host is required")
 	}
 
-	el, err := ReadEntries(g.Hosts)
+	el, err := readEntries(g.Hosts)
 	if err != nil {
 		return err
 	}
 
-	el, changed := c.DeleteFrom(el)
+	el, changed := c.deleteFrom(el)
 
 	if changed {
-		return WriteEntries(g.Hosts, el)
+		return writeEntries(g.Hosts, el)
 	}
 
 	return nil
 }
 
-func (c deleteCmd) DeleteFrom(el []Entry) ([]Entry, bool) {
+func (c deleteCmd) deleteFrom(el []entry) ([]entry, bool) {
 	changed := false
 	clise.Filter(&el, func(i int) bool {
 		if c.IP != nil && c.Host != nil && el[i].IP == *c.IP && el[i].Host == *c.Host {

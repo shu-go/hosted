@@ -7,16 +7,16 @@ import (
 	"github.com/shu-go/gotwant"
 )
 
-func read(hosts string) []Entry {
+func read(hosts string) []entry {
 	input := bytes.NewBufferString(hosts)
-	el, _ := ReadEntriesFromReader(input)
+	el, _ := readEntriesFromReader(input)
 	return el
 }
 
-func list(el []Entry) string {
+func list(el []entry) string {
 	ls := listCmd{}
 	buf := bytes.Buffer{}
-	ls.List(el, &buf)
+	ls.list(el, &buf)
 	return buf.String()
 }
 

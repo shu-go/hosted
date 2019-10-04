@@ -9,6 +9,7 @@ import (
 	"github.com/shu-go/gli"
 )
 
+// Version is app version
 var Version string
 
 func init() {
@@ -28,22 +29,22 @@ type globalCmd struct {
 	Disable disableCmd `cli:"disable,x"`
 }
 
-func ReadEntries(filename string) ([]Entry, error) {
+func readEntries(filename string) ([]entry, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	return ReadEntriesFromReader(f)
+	return readEntriesFromReader(f)
 }
 
-func ReadEntriesFromReader(in io.Reader) ([]Entry, error) {
-	el := make([]Entry, 0, 10)
+func readEntriesFromReader(in io.Reader) ([]entry, error) {
+	el := make([]entry, 0, 10)
 
 	scanner := bufio.NewScanner(in)
 	for scanner.Scan() {
-		e := ReadEntry(scanner.Text())
+		e := readEntry(scanner.Text())
 		if e != nil {
 			el = append(el, *e)
 		}
@@ -55,17 +56,17 @@ func ReadEntriesFromReader(in io.Reader) ([]Entry, error) {
 	return el, nil
 }
 
-func WriteEntries(filename string, el []Entry) error {
+func writeEntries(filename string, el []entry) error {
 	f, err := os.OpenFile(filename, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
-	return WriteEntriesToWriter(f, el)
+	return writeEntriesToWriter(f, el)
 }
 
-func WriteEntriesToWriter(out io.Writer, el []Entry) error {
+func writeEntriesToWriter(out io.Writer, el []entry) error {
 	content := make([]byte, 0, 1024)
 
 	for _, e := range el {
@@ -77,7 +78,7 @@ func WriteEntriesToWriter(out io.Writer, el []Entry) error {
 	return err
 }
 
-func matches(e Entry, ip, host *string) bool {
+func matches(e entry, ip, host *string) bool {
 	if ip != nil && e.IP != *ip {
 		return false
 	}
@@ -111,5 +112,8 @@ hosted enable --host oldserver
 hosted o --host oldserver
 `
 	app.Copyright = "(C) 2019 Shuhei Kubota"
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		os.Exit(1)
+	}
 }

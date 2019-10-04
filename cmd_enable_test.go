@@ -22,7 +22,7 @@ func TestEnable(t *testing.T) {
 		ip := "192.168.1.201"
 		el := read(hosts)
 		enable := enableCmd{IP: &ip}
-		el = enable.Enable(el)
+		el = enable.enable(el)
 		result := list(el)
 		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server
 # 38.25.63.10 x.acme.com # x client host
@@ -37,7 +37,7 @@ func TestEnable(t *testing.T) {
 		ip = "111.111.1.111"
 		el = read(hosts)
 		enable = enableCmd{IP: &ip}
-		el = enable.Enable(el)
+		el = enable.enable(el)
 		result = list(el)
 		gotwant.Test(t, result, ``)
 	})
@@ -46,7 +46,7 @@ func TestEnable(t *testing.T) {
 		host := "server01"
 		el := read(hosts)
 		enable := enableCmd{Host: &host}
-		el = enable.Enable(el)
+		el = enable.enable(el)
 		result := list(el)
 		gotwant.Test(t, result, `# 102.54.94.97 rhino.acme.com # source server
 # 38.25.63.10 x.acme.com # x client host
@@ -61,7 +61,7 @@ func TestEnable(t *testing.T) {
 		host = "localhost"
 		el = read(hosts)
 		enable = enableCmd{Host: &host}
-		el = enable.Enable(el)
+		el = enable.enable(el)
 		result = list(el)
 		gotwant.Test(t, result, ``)
 	})

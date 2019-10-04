@@ -24,7 +24,7 @@ func TestCmdDelete(t *testing.T) {
 		del := deleteCmd{
 			IP: &ip,
 		}
-		el, changed := del.DeleteFrom(el)
+		el, changed := del.deleteFrom(el)
 
 		gotwant.Test(t, changed, true)
 
@@ -41,7 +41,7 @@ func TestCmdDelete(t *testing.T) {
 		del = deleteCmd{
 			IP: &ip,
 		}
-		el, changed = del.DeleteFrom(el)
+		el, changed = del.deleteFrom(el)
 
 		gotwant.Test(t, changed, true)
 
@@ -60,7 +60,7 @@ func TestCmdDelete(t *testing.T) {
 		del := deleteCmd{
 			Host: &host,
 		}
-		el, changed := del.DeleteFrom(el)
+		el, changed := del.deleteFrom(el)
 
 		gotwant.Test(t, changed, true)
 
@@ -76,7 +76,7 @@ func TestCmdDelete(t *testing.T) {
 		del = deleteCmd{
 			Host: &host,
 		}
-		el, changed = del.DeleteFrom(el)
+		el, changed = del.deleteFrom(el)
 
 		gotwant.Test(t, changed, false)
 
