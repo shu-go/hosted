@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+
+	"github.com/shu-go/clise"
 )
 
 type deleteCmd struct {
@@ -20,7 +22,7 @@ func (c deleteCmd) Run(g globalCmd) error {
 		return err
 	}
 
-	el, changed := c.Delete(el, c.IP, c.Host)
+	el, changed := c.DeleteFrom(el)
 
 	if changed {
 		return WriteEntries(g.Hosts, el)
@@ -29,23 +31,20 @@ func (c deleteCmd) Run(g globalCmd) error {
 	return nil
 }
 
-func (c deleteCmd) Delete(el []Entry, ip, host *string) ([]Entry, bool) {
-	idx := -1
-	for i, e := range el {
-		if ip != nil && host != nil && e.IP == *ip && e.Host == *host {
-			idx = i
-			break
-		} else if ip != nil && e.IP == *ip {
-			idx = i
-			break
-		} else if host != nil && e.Host == *host {
-			idx = i
-			break
+func (c deleteCmd) DeleteFrom(el []Entry) ([]Entry, bool) {
+	changed := false
+	clise.Filter(&el, func(i int) bool {
+		if c.IP != nil && c.Host != nil && el[i].IP == *c.IP && el[i].Host == *c.Host {
+			changed = true
+			return false
+		} else if c.IP != nil && el[i].IP == *c.IP {
+			changed = true
+			return false
+		} else if c.Host != nil && el[i].Host == *c.Host {
+			changed = true
+			return false
 		}
-	}
-	if idx != -1 { // found
-		el = append(el[:idx], el[idx+1:]...)
-		return el, true
-	}
-	return el, false
+		return true
+	})
+	return el, changed
 }
