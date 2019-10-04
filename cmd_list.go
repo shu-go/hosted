@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 type listCmd struct {
+	Comment *string
 }
 
 func (c listCmd) Run(g globalCmd) error {
@@ -22,8 +24,17 @@ func (c listCmd) Run(g globalCmd) error {
 
 func (c listCmd) list(el []entry, out io.Writer) {
 	for _, e := range el {
-		if e.Type == hostEntry {
+		if e.Type == hostEntry &&
+			(c.Comment == nil || strings.Contains(e.Comment, *c.Comment)) {
+			//
 			fmt.Fprintln(out, e)
 		}
+	}
+}
+
+func (c *listCmd) feed(args []string) {
+	if len(args) > 0 {
+		a := args[0]
+		c.Comment = &a
 	}
 }

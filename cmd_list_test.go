@@ -41,4 +41,26 @@ func TestCmdList(t *testing.T) {
 # 192.168.1.201 server01 # new server
 `)
 
+	t.Run("Comment/Option", func(t *testing.T) {
+		el := read(hosts)
+		comment := "server"
+		ls := listCmd{Comment: &comment}
+		buf := bytes.Buffer{}
+		ls.list(el, &buf)
+		gotwant.Test(t, buf.String(), `# 102.54.94.97 rhino.acme.com # source server
+# 192.168.1.201 server01 # new server
+`)
+	})
+
+	t.Run("Comment/Args", func(t *testing.T) {
+		el := read(hosts)
+		ls := listCmd{}
+		ls.feed([]string{"server"})
+		buf := bytes.Buffer{}
+		ls.list(el, &buf)
+		gotwant.Test(t, buf.String(), `# 102.54.94.97 rhino.acme.com # source server
+# 192.168.1.201 server01 # new server
+`)
+	})
+
 }
