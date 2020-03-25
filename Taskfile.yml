@@ -8,14 +8,15 @@ tasks:
 
   test:
     cmds:
-      - cmd /c "del manifest.syso"
+      - cmd /c "del manifest.syso" 2>nul
       - go test -v ./...
 
   build:
     cmds:
-      - rsrc -manifest manifest.xml -o manifest.syso
+      #- rsrc -manifest manifest.xml -o manifest.syso
       - go build -ldflags "-s -w -X main.Version={{.TAG}}" ./...
       - where upx && upx hosted{{exeExt}}
     vars:
         TAG:
             sh: git describe --abbrev=0
+            
