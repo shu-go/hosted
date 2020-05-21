@@ -72,7 +72,7 @@ func writeEntriesToWriter(out io.Writer, el []entry) error {
 
 	for _, e := range el {
 		content = append(content, e.String()...)
-		content = append(content, "\n"...)
+		content = append(content, "\r\n"...)
 	}
 
 	_, err := io.WriteString(out, string(content))
