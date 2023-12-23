@@ -13,12 +13,6 @@ import (
 // Version is app version
 var Version string
 
-func init() {
-	if Version == "" {
-		Version = "dev-" + time.Now().Format("20060102")
-	}
-}
-
 type globalCmd struct {
 	Hosts string `cli:"hosts=PATH"  default:"C:\\Windows\\System32\\Drivers\\etc\\hosts"`
 
